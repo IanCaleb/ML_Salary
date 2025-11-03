@@ -56,4 +56,4 @@ importances = pd.DataFrame({
 }).sort_values("importance", ascending=False)
 
 print("\nTop 10 variáveis mais importantes:")
-print(importances.head(14))
+print(importances.head(50))
