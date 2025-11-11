@@ -11,29 +11,38 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 import joblib
+import os
 
 # ==============================
 # 1. Carregar os dados
 # ==============================
-# Exemplo: substitua pelo seu dataset real
-df = pd.read_csv("C:\Users\Ian Caleb\OneDrive\Área de Trabalho\ML_salary\ML_Salary\data\TB_salary.csv")
+df = pd.read_csv(
+    r"C:\Users\Ian Caleb\OneDrive\Área de Trabalho\ML_salary\ML_Salary\data\TB_salary.csv"
+)
 
-# Supondo que a coluna alvo seja 'faixa_salarial'
+# Mapeia a variável alvo (">50K" = 1, "<=50K" = 0)
+df["salary"] = df["salary"].replace({
+    ">50K": 1,
+    "<=50K": 0,
+    ">50K.": 1,
+    "<=50K.": 0
+})
+
+# Separa variáveis preditoras e alvo
 X = df.drop("salary", axis=1)
 y = df["salary"]
 
 # Divisão em treino e teste (80% / 20%)
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42, stratify=y
+)
 
 # ==============================
 # 2. Pré-processamento
 # ==============================
-
-# Seletores automáticos de colunas
 num_selector = selector(dtype_include=["int64", "float64"])
 cat_selector = selector(dtype_include=["object", "category"])
 
-# Transformer de pré-processamento
 preprocess = ColumnTransformer(
     transformers=[
         ("num", SimpleImputer(strategy="median"), num_selector),
@@ -84,4 +93,5 @@ print(f"Desvio padrão: {scores.std():.4f}")
 # 7. Salvar modelo treinado
 # ==============================
 joblib.dump(model, "modelo_predicao_salarial.pkl")
+
 print("\nModelo salvo como 'modelo_predicao_salarial.pkl'")

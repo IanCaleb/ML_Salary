@@ -1,15 +1,13 @@
 # ==============================
-# preprocess_train.py
+# preprocess_train_nn.py
 # ==============================
-
 import pandas as pd
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import OneHotEncoder
+from sklearn.preprocessing import OneHotEncoder, StandardScaler
 from sklearn.compose import ColumnTransformer, make_column_selector as selector
 from sklearn.pipeline import Pipeline
 from sklearn.impute import SimpleImputer
-from sklearn.ensemble import GradientBoostingClassifier
-
+from sklearn.neural_network import MLPClassifier
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, classification_report
 
 # -------------------------------
@@ -17,7 +15,7 @@ from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_sc
 # -------------------------------
 df = pd.read_csv("C:/ML_salary/ML_Salary/data/TB_salary.csv")
 
-# Supondo que a coluna alvo se chame "target"
+# Supondo que a coluna alvo se chame "salary"
 X = df.drop("salary", axis=1)
 y = df["salary"]
 
@@ -37,7 +35,10 @@ cat_selector = selector(dtype_include=["object", "category"])
 # -------------------------------
 preprocess = ColumnTransformer(
     transformers=[
-        ("num", SimpleImputer(strategy="median"), num_selector),
+        ("num", Pipeline([
+            ("imputer", SimpleImputer(strategy="median")),
+            ("scaler", StandardScaler())  # Normaliza variáveis numéricas
+        ]), num_selector),
         ("cat", Pipeline([
             ("imputer", SimpleImputer(strategy="most_frequent")),
             ("onehot", OneHotEncoder(handle_unknown="ignore"))
@@ -45,12 +46,12 @@ preprocess = ColumnTransformer(
     ]
 )
 
-# -----------------------------------
-# Pipeline completo: pré-processamento + modelo
-# -----------------------------------
+# -------------------------------
+# Pipeline completo: pré-processamento + rede neural
+# -------------------------------
 model = Pipeline([
     ("prep", preprocess),
-    ("gb", GradientBoostingClassifier(random_state=42))
+    ("mlp", MLPClassifier(hidden_layer_sizes=(100, 50), activation='relu', solver='adam', max_iter=500, random_state=42))
 ])
 
 # -------------------------------

@@ -23,10 +23,14 @@ cat_selector = selector(dtype_include=["object", "category"])
 preprocess = ColumnTransformer(
     transformers=[
         ("num", SimpleImputer(strategy="median"), num_selector),
-        ("cat", Pipeline([
-            ("imputer", SimpleImputer(strategy="most_frequent")),
-            ("onehot", OneHotEncoder(handle_unknown="ignore"))
-        ]), cat_selector),
+        (
+            "cat",
+            Pipeline([
+                ("imputer", SimpleImputer(strategy="most_frequent")),
+                ("onehot", OneHotEncoder(handle_unknown="ignore")),
+            ]),
+            cat_selector,
+        ),
     ]
 )
 
@@ -43,13 +47,12 @@ xgb_model = XGBClassifier(
     random_state=42,
 )
 
-
 # -----------------------------------
 # Pipeline completo: pré-processamento + modelo
 # -----------------------------------
 model = Pipeline([
     ("preprocess", preprocess),
-    ("xgb", xgb_model)
+    ("xgb", xgb_model),
 ])
 
 # -----------------------------------
