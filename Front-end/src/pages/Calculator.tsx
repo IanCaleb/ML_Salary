@@ -254,6 +254,7 @@ const Calculator = () => {
                     <SelectItem value="Holand-Netherlands">Holanda</SelectItem>
                     <SelectItem value="Honduras">Honduras</SelectItem>
                     <SelectItem value="Hong">Hong Kong</SelectItem>
+                    <SelectItem value="United-States">EUA</SelectItem>
                     <SelectItem value="?">Outro</SelectItem>
                   </SelectContent>
                 </Select>
