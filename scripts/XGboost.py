@@ -10,6 +10,7 @@ from sklearn.impute import SimpleImputer
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
 from xgboost import XGBClassifier
+import joblib
 
 # -----------------------------------
 # Seletores de colunas
@@ -116,3 +117,7 @@ if __name__ == "__main__":
     print("Acurácia:", accuracy_score(y_test, y_test_pred))
     print("\nMatriz de confusão:\n", confusion_matrix(y_test, y_test_pred))
     print("\nRelatório de classificação:\n", classification_report(y_test, y_test_pred))
+
+    # Salvar pipeline completo já treinado
+    joblib.dump(model, "salary_xgb_pipeline.pkl")
+    print("Modelo salvo como salary_xgb_pipeline.pkl")
