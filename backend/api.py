@@ -16,7 +16,7 @@ app.add_middleware(
 )
 
 # --- Carrega o modelo treinado ---
-model = joblib.load(r"C:\Users\Ian Caleb\OneDrive\Área de Trabalho\ML_salary\salary_xgb_pipeline.pkl")
+model = joblib.load(r"C:\Users\Ian Caleb\OneDrive\Área de Trabalho\ML_salary\ML_Salary\backend\salary_xgb_pipeline.pkl")
 
 # --- Modelo esperado na API ---
 class SalaryFeatures(BaseModel):
